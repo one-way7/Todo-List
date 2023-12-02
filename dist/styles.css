@@ -1,0 +1,68 @@
+*,
+*:before,
+*:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    font-family: 'Alata', sans-serif;
+    font-size: 62.5%;
+
+    --bg-color-1: #fefcfe;
+    --bg-color-3: #f2f3f5;
+    --text-color: #374958;
+    --accent: #5433ff;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    padding: 0.2rem 3rem;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: var(--bg-color-3);
+    border-bottom: 2px solid var(--accent);
+}
+
+.hamburger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.project_logo_text {
+    display: flex;
+    align-items: center;
+
+    font-size: 3.6rem;
+    font-weight: 800;
+    color: var(--accent);
+
+    letter-spacing: 0.1rem;
+}
+
+.project_logo {
+    margin-right: 0.5rem;
+}
+
+.project_logo_text > span {
+    color: var(--text-color);
+}
+
+.theme {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
