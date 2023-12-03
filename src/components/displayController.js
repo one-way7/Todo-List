@@ -2,19 +2,25 @@ import ProjectsController from './projectsController';
 
 class DisplayController {
     #projectsContainer = document.querySelector('.projects_wrapper');
+    #toDosContainer = document.querySelector('.tasks_container');
     #projectForm = document.querySelector('.project_form');
     #projectsController = new ProjectsController();
-    #activeProject;
+    #activeProjectElemId;
 
     constructor() {}
 
     #renderProjects = () => {
-        console.log(this.#projectsContainer);
         this.#projectsContainer.textContent = '';
 
-        this.#projectsController.getProjects().forEach((project) => {
+        this.#projectsController.getProjects().forEach((project, i) => {
             const projectElem = document.createElement('div');
             projectElem.classList.add('project_block');
+
+            if (this.#activeProjectElemId && this.#activeProjectElemId == i) {
+                projectElem.classList.add('focus');
+            }
+
+            projectElem.setAttribute('data-id', i);
             projectElem.innerHTML = `
                 <img 
                     src="./assets/icons/project-icon.png"
@@ -31,6 +37,7 @@ class DisplayController {
                     height="45"
                 />
             `;
+
             this.#projectsContainer.insertAdjacentElement(
                 'beforeend',
                 projectElem,
@@ -42,7 +49,7 @@ class DisplayController {
         this.#projectsController.addProject(title);
     };
 
-    deleteProjectFromContainer = (id) => {
+    #deleteProjectFromContainer = (id) => {
         this.#projectsController.deleteProject(id);
         this.#renderProjects();
     };
@@ -55,7 +62,19 @@ class DisplayController {
         this.#projectForm.classList.add('hidden');
     };
 
-    handleAddProjectClick = () => {
+    #addFocusClassOnProjectElem = (elem) => {
+        elem.classList.add('focus');
+    };
+
+    #removeFocusClassOnProjectElems = () => {
+        const projectsElem = [...this.#projectsContainer.children];
+
+        projectsElem.forEach((projectElem) => {
+            projectElem.classList.remove('focus');
+        });
+    };
+
+    handleClickAddProject = () => {
         this.#displayProjectForm();
     };
 
@@ -80,6 +99,17 @@ class DisplayController {
 
         this.#hideProjectForm();
         titleName.value = '';
+    };
+
+    handleClickOnProject = (e) => {
+        if (e.target.classList.contains('project_block')) {
+            const projectElem = e.target;
+            const projectElemId = e.target.getAttribute('data-id');
+            this.#activeProjectElemId = projectElemId;
+
+            this.#removeFocusClassOnProjectElems();
+            this.#addFocusClassOnProjectElem(projectElem);
+        }
     };
 }
 
