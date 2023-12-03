@@ -16,6 +16,10 @@ class ProjectsController {
     getProjects = () => {
         return this.#projects;
     };
+
+    getActiveProject = (i) => {
+        return this.#projects[i];
+    };
 }
 
 export default ProjectsController;
