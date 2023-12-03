@@ -220,6 +220,7 @@ body {
 .projects_wrapper {
     display: flex;
     flex-direction: column;
+    gap: 0.6rem;
 }
 
 .project_block {
