@@ -10,7 +10,9 @@ class ProjectsController {
     };
 
     deleteProject = (id) => {
-        this.#projects = this.#projects.filter((project) => !project.id === id);
+        this.#projects = this.#projects.filter((project) => {
+            return !(project.getId() === id);
+        });
     };
 
     getProjects = () => {

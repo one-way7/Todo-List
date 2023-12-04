@@ -10,6 +10,10 @@ class Project {
         this.#title = title;
     }
 
+    getId = () => {
+        return this.#id;
+    };
+
     changeTitle = (newTitle) => {
         this.#title = newTitle;
     };

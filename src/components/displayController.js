@@ -39,6 +39,11 @@ class DisplayController {
                 </span>
             `;
 
+            projectElem.addEventListener(
+                'click',
+                this.handleClickDeleteProject,
+            );
+
             this.#projectsContainer.insertAdjacentElement(
                 'beforeend',
                 projectElem,
@@ -89,6 +94,7 @@ class DisplayController {
     #deleteProjectFromContainer = (id) => {
         this.#projectsController.deleteProject(id);
         this.#renderProjects();
+        this.#toDosContainer.textContent = '';
     };
 
     #displayElement = (elem) => {
@@ -192,6 +198,18 @@ class DisplayController {
         this.#hideHeaderContent();
         this.#renderActiveProjectToDos(this.#activeProjectElemId);
         e.target.reset();
+    };
+
+    handleClickDeleteProject = (e) => {
+        const target = e.target;
+
+        if (target.classList.contains('delete_icon')) {
+            const projectElemId = e.currentTarget.getAttribute('data-id');
+            const projectObjId = this.#projectsController
+                .getActiveProject(projectElemId)
+                .getId();
+            this.#deleteProjectFromContainer(projectObjId);
+        }
     };
 }
 
