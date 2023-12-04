@@ -29,8 +29,10 @@ class Project {
         ];
     };
 
-    deleteToDo = (id) => {
-        this.#toDos = this.#toDos.filter((toDo) => !toDo.id === id);
+    deleteToDo = (i) => {
+        const toDo = this.getToDo(i);
+        const id = toDo.getId();
+        this.#toDos = this.#toDos.filter((toDo) => !(toDo.getId() === id));
     };
 
     getToDos = () => {

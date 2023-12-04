@@ -26,6 +26,10 @@ class ToDo {
         };
     };
 
+    getId = () => {
+        return this.#id;
+    };
+
     getTitle = () => {
         return this.#title;
     };

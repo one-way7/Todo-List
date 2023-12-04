@@ -18,6 +18,10 @@ class ProjectsController {
         });
     };
 
+    deleteToDoFromProject = (projectIndex, toDoIndex) => {
+        this.getActiveProject(projectIndex).deleteToDo(toDoIndex);
+    };
+
     getProjects = () => {
         return this.#projects;
     };

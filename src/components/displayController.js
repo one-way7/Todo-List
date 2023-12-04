@@ -21,10 +21,6 @@ class DisplayController {
             const projectElem = document.createElement('div');
             projectElem.classList.add('project_block');
 
-            if (this.#activeProjectElemId && this.#activeProjectElemId == i) {
-                projectElem.classList.add('focus');
-            }
-
             projectElem.setAttribute('data-id', i);
             projectElem.innerHTML = `
                 <img 
@@ -48,6 +44,13 @@ class DisplayController {
 
     #renderActiveProjectToDos = (id) => {
         this.#toDosContainer.textContent = '';
+        if (id === null) return;
+        if (
+            this.#projectsController.getActiveProject(id).getToDos().length ===
+            0
+        ) {
+            this.#showHeaderContent();
+        }
 
         this.#projectsController
             .getActiveProject(id)
@@ -70,7 +73,7 @@ class DisplayController {
                         </button>
                     </div>
                     <div class="toDo_card-settings">
-                        <span class="material-symbols-rounded">
+                        <span class="material-symbols-rounded delete_card-icon">
                             delete
                         </span>
                     </div>
@@ -86,12 +89,6 @@ class DisplayController {
     #addProjectToContainer = (title) => {
         this.#projectsController.addProject(title);
     };
-
-    #deleteProjectFromContainer = () => {
-        this.#renderProjects();
-    };
-
-    #deleteToDoFromContainer = (id) => {};
 
     #displayElement = (elem) => {
         elem.classList.remove('hidden');
@@ -114,15 +111,11 @@ class DisplayController {
     };
 
     #hideHeaderContent = () => {
-        if (this.#activeProject.getToDos().length > 0) {
-            this.#hideElement(this.#headerContent);
-        }
+        this.#hideElement(this.#headerContent);
     };
 
     #showHeaderContent = () => {
-        if (this.#activeProject.getToDos().length === 0) {
-            this.#displayElement(this.#headerContent);
-        }
+        this.#displayElement(this.#headerContent);
     };
 
     handleClickAddProject = () => {
@@ -200,15 +193,23 @@ class DisplayController {
         if (e.target.classList.contains('delete_icon')) {
             const projectIndex = e.target.parentNode.getAttribute('data-id');
             this.#projectsController.deleteProject(projectIndex);
-            this.#deleteProjectFromContainer();
+
+            this.#renderProjects();
         }
     };
 
     handleClickDeleteToDo = (e) => {
-        console.log(e.target);
-        const index = e.currentTarget.getAttribute('data-toDo-id');
-        console.log(index);
-        console.log(this.#activeProject.getToDo(index));
+        if (e.target.classList.contains('delete_card-icon')) {
+            const toDoCardIndex =
+                e.target.parentNode.parentNode.getAttribute('data-todo-id');
+
+            this.#projectsController.deleteToDoFromProject(
+                this.#activeProjectElemId,
+                toDoCardIndex,
+            );
+
+            this.#renderActiveProjectToDos(this.#activeProjectElemId);
+        }
     };
 }
 
