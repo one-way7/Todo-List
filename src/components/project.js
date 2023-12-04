@@ -36,6 +36,10 @@ class Project {
     getToDos = () => {
         return this.#toDos;
     };
+
+    getToDo = (i) => {
+        return this.#toDos[i];
+    };
 }
 
 export default Project;

@@ -39,11 +39,6 @@ class DisplayController {
                 </span>
             `;
 
-            projectElem.addEventListener(
-                'click',
-                this.handleClickDeleteProject,
-            );
-
             this.#projectsContainer.insertAdjacentElement(
                 'beforeend',
                 projectElem,
@@ -57,12 +52,13 @@ class DisplayController {
         this.#projectsController
             .getActiveProject(id)
             .getToDos()
-            .forEach((toDo) => {
+            .forEach((toDo, i) => {
                 const { title, description, date, isImportant, isDone } =
                     toDo.getToDoInfo();
 
                 const toDoElem = document.createElement('div');
                 toDoElem.classList.add('toDo_card');
+                toDoElem.setAttribute('data-toDo-id', i);
 
                 toDoElem.innerHTML = `
                     <div class="toDo_card-content">
@@ -91,11 +87,11 @@ class DisplayController {
         this.#projectsController.addProject(title);
     };
 
-    #deleteProjectFromContainer = (id) => {
-        this.#projectsController.deleteProject(id);
+    #deleteProjectFromContainer = () => {
         this.#renderProjects();
-        this.#toDosContainer.textContent = '';
     };
+
+    #deleteToDoFromContainer = (id) => {};
 
     #displayElement = (elem) => {
         elem.classList.remove('hidden');
@@ -201,15 +197,18 @@ class DisplayController {
     };
 
     handleClickDeleteProject = (e) => {
-        const target = e.target;
-
-        if (target.classList.contains('delete_icon')) {
-            const projectElemId = e.currentTarget.getAttribute('data-id');
-            const projectObjId = this.#projectsController
-                .getActiveProject(projectElemId)
-                .getId();
-            this.#deleteProjectFromContainer(projectObjId);
+        if (e.target.classList.contains('delete_icon')) {
+            const projectIndex = e.target.parentNode.getAttribute('data-id');
+            this.#projectsController.deleteProject(projectIndex);
+            this.#deleteProjectFromContainer();
         }
+    };
+
+    handleClickDeleteToDo = (e) => {
+        console.log(e.target);
+        const index = e.currentTarget.getAttribute('data-toDo-id');
+        console.log(index);
+        console.log(this.#activeProject.getToDo(index));
     };
 }
 
