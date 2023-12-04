@@ -288,6 +288,8 @@ body {
 }
 
 .toDo_card {
+    position: relative;
+
     padding: 2.2rem;
     width: 25rem;
     height: 32rem;
@@ -297,6 +299,17 @@ body {
     justify-content: space-between;
 
     border-radius: 10px;
+}
+
+.toDo_card.done::before {
+    content: '';
+    position: absolute;
+    width: 110%;
+    height: 3px;
+
+    top: 50%;
+    left: -5%;
+    background-color: #000;
 }
 
 .toDo_card-content {
@@ -454,4 +467,9 @@ body {
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     pointer-events: all;
+}
+
+.done_btn {
+    background-color: var(--green-color);
+    color: var(--text-color-white);
 }

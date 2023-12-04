@@ -61,8 +61,12 @@ class DisplayController {
                 const { title, description, date, isImportant, isDone } =
                     toDo.getToDoInfo();
 
+                const doneBtnContent = isDone ? 'Done' : 'Mark as done';
+                const doneBtnClass = isDone ? 'done_btn' : '';
+                const toDoCardStatusClass = isDone ? 'done' : 's';
+
                 const toDoElem = document.createElement('div');
-                toDoElem.classList.add('toDo_card');
+                toDoElem.classList.add('toDo_card', toDoCardStatusClass);
                 toDoElem.setAttribute('data-toDo-id', i);
 
                 toDoElem.innerHTML = `
@@ -70,8 +74,8 @@ class DisplayController {
                         <div class="toDo_title">${title}</div>
                         <div class="toDo_descr">${description}</div>
                         <div class="toDo_date">${date}</div>
-                        <button class="button_status">
-                            Mark as done
+                        <button class="button_status ${doneBtnClass}">
+                            ${doneBtnContent}
                         </button>
                     </div>
                     <div class="toDo_card-settings">
@@ -210,6 +214,20 @@ class DisplayController {
                 e.target.parentNode.parentNode.getAttribute('data-todo-id');
 
             this.#projectsController.deleteToDoFromProject(
+                this.#activeProjectElemId,
+                toDoCardIndex,
+            );
+
+            this.#renderActiveProjectToDos(this.#activeProjectElemId);
+        }
+    };
+
+    handleClickMarkAsDone = (e) => {
+        if (e.target.classList.contains('button_status')) {
+            const toDoCardIndex =
+                e.target.parentNode.parentNode.getAttribute('data-todo-id');
+
+            this.#projectsController.toggleDoneStatus(
                 this.#activeProjectElemId,
                 toDoCardIndex,
             );
