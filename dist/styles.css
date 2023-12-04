@@ -244,9 +244,11 @@ body {
     color: var(--text-color);
 }
 
-.settings_icon {
+.delete_icon {
     margin-left: auto;
     margin-right: 2rem;
+
+    color: var(--text-color);
 }
 
 .content {
@@ -323,6 +325,10 @@ body {
 .toDo_date {
     color: var(--text-color-light_gray);
     font-size: 1.2rem;
+}
+
+.toDo_card-settings > span {
+    color: var(--text-color);
 }
 
 .button_status {

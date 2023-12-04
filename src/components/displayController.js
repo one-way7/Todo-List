@@ -34,13 +34,9 @@ class DisplayController {
                     height="45" 
                 />
                 <span class="project_name">${project.getTitle()}</span>
-                <img
-                    class="settings_icon"
-                    src="./assets/icons/settings-icon.svg" 
-                    alt="project settings icon"
-                    width="45"
-                    height="45"
-                />
+                <span class="material-symbols-rounded delete_icon">
+                    delete
+                </span>
             `;
 
             this.#projectsContainer.insertAdjacentElement(
@@ -74,7 +70,7 @@ class DisplayController {
                     </div>
                     <div class="toDo_card-settings">
                         <span class="material-symbols-rounded">
-                            more_vert
+                            delete
                         </span>
                     </div>
                 `;
