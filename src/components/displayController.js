@@ -124,6 +124,19 @@ class DisplayController {
         this.#displayElement(this.#headerContent);
     };
 
+    #setActiveProjectElem = (target) => {
+        const projectElem = target;
+        const projectElemId = target.getAttribute('data-id');
+        this.#activeProject =
+            this.#projectsController.getActiveProject(projectElemId);
+        this.#activeProjectElemId = projectElemId;
+
+        this.#removeFocusClassOnProjectElems();
+        this.#addFocusClassOnProjectElem(projectElem);
+
+        this.#renderActiveProjectToDos(projectElemId);
+    };
+
     handleClickAddProject = () => {
         this.#displayElement(this.#projectForm);
     };
@@ -153,16 +166,13 @@ class DisplayController {
 
     handleClickOnProject = (e) => {
         if (e.target.classList.contains('project_block')) {
-            const projectElem = e.target;
-            const projectElemId = e.target.getAttribute('data-id');
-            this.#activeProject =
-                this.#projectsController.getActiveProject(projectElemId);
-            this.#activeProjectElemId = projectElemId;
+            const target = e.target;
+            this.#setActiveProjectElem(target);
+        }
 
-            this.#removeFocusClassOnProjectElems();
-            this.#addFocusClassOnProjectElem(projectElem);
-
-            this.#renderActiveProjectToDos(projectElemId);
+        if (e.target.parentNode.classList.contains('project_block')) {
+            const target = e.target.parentNode;
+            this.#setActiveProjectElem(target);
         }
     };
 
