@@ -2,9 +2,14 @@ import ProjectsController from './projectsController';
 
 class DisplayController {
     #projectsContainer = document.querySelector('.projects_wrapper');
-    #toDosContainer = document.querySelector('.tasks_container');
+    #toDosContainer = document.querySelector('.toDos_wrapper');
     #projectForm = document.querySelector('.project_form');
+    #headerContent = document.querySelector('.h3');
+    #overlayDiv = document.querySelector('#overlay');
+    #toDoForm = document.querySelector('.toDo_form');
+    #addNewToDoBtn = document.querySelector('.new_task');
     #projectsController = new ProjectsController();
+    #activeProject;
     #activeProjectElemId;
 
     constructor() {}
@@ -45,6 +50,42 @@ class DisplayController {
         });
     };
 
+    #renderActiveProjectToDos = (id) => {
+        this.#toDosContainer.textContent = '';
+
+        this.#projectsController
+            .getActiveProject(id)
+            .getToDos()
+            .forEach((toDo) => {
+                const { title, description, date, isImportant, isDone } =
+                    toDo.getToDoInfo();
+
+                const toDoElem = document.createElement('div');
+                toDoElem.classList.add('toDo_card');
+
+                toDoElem.innerHTML = `
+                    <div class="toDo_card-content">
+                        <div class="toDo_title">${title}</div>
+                        <div class="toDo_descr">${description}</div>
+                        <div class="toDo_date">${date}</div>
+                        <button class="button_status">
+                            Mark as done
+                        </button>
+                    </div>
+                    <div class="toDo_card-settings">
+                        <span class="material-symbols-rounded">
+                            more_vert
+                        </span>
+                    </div>
+                `;
+
+                this.#toDosContainer.insertAdjacentElement(
+                    'afterbegin',
+                    toDoElem,
+                );
+            });
+    };
+
     #addProjectToContainer = (title) => {
         this.#projectsController.addProject(title);
     };
@@ -54,12 +95,12 @@ class DisplayController {
         this.#renderProjects();
     };
 
-    #displayProjectForm = () => {
-        this.#projectForm.classList.remove('hidden');
+    #displayElement = (elem) => {
+        elem.classList.remove('hidden');
     };
 
-    #hideProjectForm = () => {
-        this.#projectForm.classList.add('hidden');
+    #hideElement = (elem) => {
+        elem.classList.add('hidden');
     };
 
     #addFocusClassOnProjectElem = (elem) => {
@@ -74,8 +115,20 @@ class DisplayController {
         });
     };
 
+    #hideHeaderContent = () => {
+        if (this.#activeProject.getToDos().length > 0) {
+            this.#hideElement(this.#headerContent);
+        }
+    };
+
+    #showHeaderContent = () => {
+        if (this.#activeProject.getToDos().length === 0) {
+            this.#displayElement(this.#headerContent);
+        }
+    };
+
     handleClickAddProject = () => {
-        this.#displayProjectForm();
+        this.#displayElement(this.#projectForm);
     };
 
     handleSubmitAddProjectForm = (e) => {
@@ -87,7 +140,7 @@ class DisplayController {
 
         this.#addProjectToContainer(titleName.value);
         this.#renderProjects();
-        this.#hideProjectForm();
+        this.#hideElement(this.#projectForm);
 
         titleName.value = '';
     };
@@ -97,7 +150,7 @@ class DisplayController {
 
         let titleName = document.querySelector('#title_input');
 
-        this.#hideProjectForm();
+        this.#hideElement(this.#projectForm);
         titleName.value = '';
     };
 
@@ -105,11 +158,44 @@ class DisplayController {
         if (e.target.classList.contains('project_block')) {
             const projectElem = e.target;
             const projectElemId = e.target.getAttribute('data-id');
+            this.#activeProject =
+                this.#projectsController.getActiveProject(projectElemId);
             this.#activeProjectElemId = projectElemId;
 
             this.#removeFocusClassOnProjectElems();
             this.#addFocusClassOnProjectElem(projectElem);
+
+            this.#renderActiveProjectToDos(projectElemId);
+
+            if (this.#addNewToDoBtn.classList.contains('hidden')) {
+                this.#displayElement(this.#addNewToDoBtn);
+            }
         }
+    };
+
+    handleClickNewTaskButton = () => {
+        this.#displayElement(this.#toDoForm);
+        this.#displayElement(this.#overlayDiv);
+    };
+
+    handleClickCloseNewTaskForm = () => {
+        this.#hideElement(this.#toDoForm);
+        this.#hideElement(this.#overlayDiv);
+        this.#toDoForm.reset();
+    };
+
+    handleSubmitNewTaskForm = (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(this.#toDoForm);
+        const { title, description, date } = Object.fromEntries(formData);
+
+        this.#activeProject.addToDo(title, description, date, false, false);
+        this.#hideElement(this.#toDoForm);
+        this.#hideElement(this.#overlayDiv);
+        this.#hideHeaderContent();
+        this.#renderActiveProjectToDos(this.#activeProjectElemId);
+        e.target.reset();
     };
 }
 

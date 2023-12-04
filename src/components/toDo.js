@@ -16,6 +16,16 @@ class ToDo {
         this.#isDone = isDone;
     }
 
+    getToDoInfo = () => {
+        return {
+            title: this.#title,
+            description: this.#description,
+            date: this.#dueDate,
+            isImportant: this.#isImportant,
+            isDone: this.#isDone,
+        };
+    };
+
     getTitle = () => {
         return this.#title;
     };
