@@ -1,7 +1,7 @@
 import Project from './project';
 
 class ProjectsController {
-    #projects = [];
+    #projects = [new Project('Default Project')];
 
     constructor() {}
 
