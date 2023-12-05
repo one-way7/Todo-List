@@ -100,7 +100,11 @@ class DisplayController {
     };
 
     #renderAllTasksTabToDos = () => {
-        // this.#toDosElem = this.#projectsController.getProjects().for
+        this.#toDosElem = this.#projectsController
+            .getProjects()
+            .map((project) => project.getToDos())
+            .flat();
+
         this.#renderToDos();
     };
 
@@ -139,6 +143,14 @@ class DisplayController {
     #setActiveProjectElem = (projectElem) => {
         this.#removeFocusClassOnProjectElems();
         this.#addFocusClassOnProjectElem(projectElem);
+    };
+
+    #changeStateDoneBtn = (target, isDone) => {
+        const doneBtnContent = isDone ? 'Done' : 'Mark as done';
+        const doneBtnClass = isDone ? 'done_btn' : '';
+        console.log(target);
+        target.textContent = doneBtnContent;
+        target.classList.toggle('done_btn');
     };
 
     handleClickAddProject = () => {
@@ -255,7 +267,8 @@ class DisplayController {
                 toDoCardIndex,
             );
 
-            this.#renderActiveProjectToDos(this.#activeProjectElemId);
+            this.#changeStateDoneBtn(e.target);
+            // this.#renderActiveProjectToDos();
         }
     };
 
