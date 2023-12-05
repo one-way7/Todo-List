@@ -13,6 +13,7 @@ class DisplayController {
     #activeProject = this.#projectsController.getActiveProject(0);
     #activeProjectElemId = 0;
     #toDosObj = [];
+    #todosObjFiltred = this.#toDosObj;
 
     constructor() {}
 
@@ -51,13 +52,13 @@ class DisplayController {
     #renderToDos = () => {
         this.#toDosContainer.textContent = '';
 
-        if (+this.#toDosObj.length === 0) {
+        if (+this.#todosObjFiltred.length === 0) {
             this.#showHeaderContent();
         } else {
             this.#hideHeaderContent();
         }
 
-        this.#toDosObj.forEach((toDo, i) => {
+        this.#todosObjFiltred.forEach((toDo, i) => {
             const { title, description, date, isImportant, isDone } =
                 toDo.getToDoInfo();
 
@@ -97,6 +98,7 @@ class DisplayController {
 
     #renderActiveProjectToDos = () => {
         this.#toDosObj = this.#activeProject.getToDos();
+        this.#todosObjFiltred = this.#toDosObj;
         this.#renderToDos();
     };
 
@@ -105,6 +107,20 @@ class DisplayController {
             .getProjects()
             .map((project) => project.getToDos())
             .flat();
+        this.#todosObjFiltred = this.#toDosObj;
+        this.#renderToDos();
+    };
+
+    #renderImportantTasks = () => {
+        this.#toDosObj = this.#projectsController
+            .getProjects()
+            .map((project) => project.getToDos())
+            .flat();
+
+        this.#todosObjFiltred = this.#toDosObj.filter((toDo) => {
+            return toDo.getImportantStatus();
+        });
+
         this.#renderToDos();
     };
 
@@ -155,6 +171,13 @@ class DisplayController {
         this.#addFocusClassOnProjectElem(projectElem);
     };
 
+    #setActiveHomeElem = (e) => {
+        this.#removeFocusClassOnProjectElems();
+        this.#removeFocusClassOnHomeElems();
+        this.#addFocusClassOnProjectElem(e.currentTarget);
+        this.#hideElement(this.#newTaskBtn);
+    };
+
     handleClickAddProject = () => {
         this.#displayElement(this.#projectForm);
     };
@@ -200,12 +223,15 @@ class DisplayController {
     };
 
     handleClickOnAllTasksTab = (e) => {
-        this.#activeProjectElemId = null;
-        this.#removeFocusClassOnProjectElems();
-        this.#removeFocusClassOnHomeElems();
-        this.#addFocusClassOnProjectElem(e.currentTarget);
-        this.#hideElement(this.#newTaskBtn);
+        this.#activeProjectElemId = 'allTasks';
+        this.#setActiveHomeElem(e);
         this.#renderAllTasksTabToDos();
+    };
+
+    handleClickOnImportantTasksTab = (e) => {
+        this.#activeProjectElemId = 'important';
+        this.#setActiveHomeElem(e);
+        this.#renderImportantTasks();
     };
 
     handleClickNewTaskButton = () => {
@@ -263,18 +289,24 @@ class DisplayController {
                 .closest('.toDo_card')
                 .getAttribute('data-todo-id');
 
-            const toDoParentIndex = this.#toDosObj[toDoCardIndex].getParentId();
-            const toDoId = this.#toDosObj[toDoCardIndex].getId();
+            const toDoParentIndex =
+                this.#todosObjFiltred[toDoCardIndex].getParentId();
+            const toDoId = this.#todosObjFiltred[toDoCardIndex].getId();
 
             this.#projectsController.deleteToDoFromProject(
                 toDoParentIndex,
                 toDoId,
             );
 
-            if (this.#activeProjectElemId) {
-                this.#renderActiveProjectToDos();
-            } else {
-                this.#renderAllTasksTabToDos();
+            switch (this.#activeProjectElemId) {
+                case 'allTasks':
+                    this.#renderAllTasksTabToDos();
+                    break;
+                case 'important':
+                    this.#renderImportantTasks();
+                    break;
+                default:
+                    this.#renderActiveProjectToDos();
             }
         }
     };
@@ -285,7 +317,7 @@ class DisplayController {
                 .closest('.toDo_card')
                 .getAttribute('data-todo-id');
 
-            this.#toDosObj[toDoCardIndex].changeDoneStatus();
+            this.#todosObjFiltred[toDoCardIndex].changeDoneStatus();
 
             this.#renderToDos();
         }
@@ -297,9 +329,13 @@ class DisplayController {
                 .closest('.toDo_card')
                 .getAttribute('data-todo-id');
 
-            this.#toDosObj[toDoCardIndex].changeImportantStatus();
+            this.#todosObjFiltred[toDoCardIndex].changeImportantStatus();
 
-            this.#renderToDos();
+            if (this.#activeProjectElemId === 'important') {
+                this.#renderImportantTasks();
+            } else {
+                this.#renderToDos();
+            }
         }
     };
 }
