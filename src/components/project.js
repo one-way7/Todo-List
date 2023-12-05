@@ -22,16 +22,21 @@ class Project {
         return this.#title;
     };
 
-    addToDo = (title, description, dueDate, isImportant, isDone) => {
+    addToDo = (title, description, dueDate, isImportant, isDone, parentId) => {
         this.#toDos = [
             ...this.#toDos,
-            new ToDo(title, description, dueDate, isImportant, isDone),
+            new ToDo(
+                title,
+                description,
+                dueDate,
+                isImportant,
+                isDone,
+                parentId,
+            ),
         ];
     };
 
-    deleteToDo = (i) => {
-        const toDo = this.getToDo(i);
-        const id = toDo.getId();
+    deleteToDo = (id) => {
         this.#toDos = this.#toDos.filter((toDo) => !(toDo.getId() === id));
     };
 

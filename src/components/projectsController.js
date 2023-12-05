@@ -18,8 +18,8 @@ class ProjectsController {
         });
     };
 
-    deleteToDoFromProject = (projectIndex, toDoIndex) => {
-        this.getActiveProject(projectIndex).deleteToDo(toDoIndex);
+    deleteToDoFromProject = (toDoParentIndex, toDoId) => {
+        this.getProjects()[toDoParentIndex].deleteToDo(toDoId);
     };
 
     getProjects = () => {

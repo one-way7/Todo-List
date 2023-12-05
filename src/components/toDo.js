@@ -6,14 +6,16 @@ class ToDo {
     #dueDate;
     #isImportant;
     #isDone;
+    #parentId;
     #id = nanoid();
 
-    constructor(title, description, dueDate, isImportant, isDone) {
+    constructor(title, description, dueDate, isImportant, isDone, parentId) {
         this.#title = title;
         this.#description = description;
         this.#dueDate = new Date(dueDate);
         this.#isImportant = isImportant;
         this.#isDone = isDone;
+        this.#parentId = parentId;
     }
 
     getToDoInfo = () => {
@@ -24,6 +26,10 @@ class ToDo {
             isImportant: this.#isImportant,
             isDone: this.#isDone,
         };
+    };
+
+    getParentId = () => {
+        return this.#parentId;
     };
 
     getId = () => {

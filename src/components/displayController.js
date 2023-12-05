@@ -103,7 +103,6 @@ class DisplayController {
             .getProjects()
             .map((project) => project.getToDos())
             .flat();
-
         this.#renderToDos();
     };
 
@@ -187,7 +186,8 @@ class DisplayController {
         }
     };
 
-    handleClickOnAllTasksTab = (e) => {
+    handleClickOnAllTasksTab = () => {
+        this.#activeProjectElemId = null;
         this.#renderAllTasksTabToDos();
     };
 
@@ -246,12 +246,19 @@ class DisplayController {
                 .closest('.toDo_card')
                 .getAttribute('data-todo-id');
 
+            const toDoParentIndex = this.#toDosObj[toDoCardIndex].getParentId();
+            const toDoId = this.#toDosObj[toDoCardIndex].getId();
+
             this.#projectsController.deleteToDoFromProject(
-                this.#activeProjectElemId,
-                toDoCardIndex,
+                toDoParentIndex,
+                toDoId,
             );
 
-            this.#renderActiveProjectToDos();
+            if (this.#activeProjectElemId) {
+                this.#renderActiveProjectToDos();
+            } else {
+                this.#renderAllTasksTabToDos();
+            }
         }
     };
 
