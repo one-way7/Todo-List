@@ -45,6 +45,44 @@ class DisplayController {
         });
     };
 
+    #renderToDo = (toDo, i) => {
+        const { title, description, date, isImportant, isDone } =
+            toDo.getToDoInfo();
+
+        const doneBtnContent = isDone ? 'Done' : 'Mark as done';
+        const doneBtnClass = isDone ? 'done_btn' : '';
+        const toDoCardStatusClass = isDone ? 'done' : 's';
+        const importantBtnContent = isImportant
+            ? 'Important!'
+            : 'Mark as Important';
+        const importantBtnClass = isImportant ? 'important' : '';
+
+        const toDoElem = document.createElement('div');
+        toDoElem.classList.add('toDo_card', toDoCardStatusClass);
+        toDoElem.setAttribute('data-toDo-id', i);
+
+        toDoElem.innerHTML = `
+        <div class="toDo_card-content">
+            <div class="toDo_title">${title}</div>
+            <div class="toDo_descr">${description}</div>
+            <div class="toDo_date">${date}</div>
+            <div class="card_buttons">
+                <button class="button_status ${doneBtnClass}">
+                    ${doneBtnContent}
+                </button>
+                <button class="button_important ${importantBtnClass}">${importantBtnContent}</button>
+            </div>
+        </div>
+        <div class="toDo_card-settings">
+            <span class="material-symbols-rounded delete_card-icon">
+                delete
+            </span>
+        </div>
+    `;
+
+        this.#toDosContainer.insertAdjacentElement('afterbegin', toDoElem);
+    };
+
     #renderActiveProjectToDos = (id) => {
         this.#toDosContainer.textContent = '';
 
@@ -57,46 +95,7 @@ class DisplayController {
         this.#projectsController
             .getActiveProject(id)
             .getToDos()
-            .forEach((toDo, i) => {
-                const { title, description, date, isImportant, isDone } =
-                    toDo.getToDoInfo();
-
-                const doneBtnContent = isDone ? 'Done' : 'Mark as done';
-                const doneBtnClass = isDone ? 'done_btn' : '';
-                const toDoCardStatusClass = isDone ? 'done' : 's';
-                const importantBtnContent = isImportant
-                    ? 'Important!'
-                    : 'Mark as Important';
-                const importantBtnClass = isImportant ? 'important' : '';
-
-                const toDoElem = document.createElement('div');
-                toDoElem.classList.add('toDo_card', toDoCardStatusClass);
-                toDoElem.setAttribute('data-toDo-id', i);
-
-                toDoElem.innerHTML = `
-                    <div class="toDo_card-content">
-                        <div class="toDo_title">${title}</div>
-                        <div class="toDo_descr">${description}</div>
-                        <div class="toDo_date">${date}</div>
-                        <div class="card_buttons">
-                            <button class="button_status ${doneBtnClass}">
-                                ${doneBtnContent}
-                            </button>
-                            <button class="button_important ${importantBtnClass}">${importantBtnContent}</button>
-                        </div>
-                    </div>
-                    <div class="toDo_card-settings">
-                        <span class="material-symbols-rounded delete_card-icon">
-                            delete
-                        </span>
-                    </div>
-                `;
-
-                this.#toDosContainer.insertAdjacentElement(
-                    'afterbegin',
-                    toDoElem,
-                );
-            });
+            .forEach(this.#renderToDo);
     };
 
     #addProjectToContainer = (title) => {
