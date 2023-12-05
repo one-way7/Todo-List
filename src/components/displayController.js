@@ -7,6 +7,7 @@ class DisplayController {
     #headerContent = document.querySelector('.h3');
     #overlayDiv = document.querySelector('#overlay');
     #toDoForm = document.querySelector('.toDo_form');
+    #newTaskBtn = document.querySelector('.new_task');
     #projectsController = new ProjectsController();
     #activeProject = this.#projectsController.getActiveProject(0);
     #activeProjectElemId = 0;
@@ -182,12 +183,14 @@ class DisplayController {
                 this.#projectsController.getActiveProject(projectElemId);
             this.#activeProjectElemId = projectElemId;
 
+            this.#displayElement(this.#newTaskBtn);
             this.#renderActiveProjectToDos();
         }
     };
 
     handleClickOnAllTasksTab = () => {
         this.#activeProjectElemId = null;
+        this.#hideElement(this.#newTaskBtn);
         this.#renderAllTasksTabToDos();
     };
 
