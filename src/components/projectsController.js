@@ -35,6 +35,12 @@ class ProjectsController {
             .getToDo(toDoIndex)
             .changeDoneStatus();
     };
+
+    toggleImportantStatus = (projectIndex, toDoIndex) => {
+        this.getActiveProject(projectIndex)
+            .getToDo(toDoIndex)
+            .changeImportantStatus();
+    };
 }
 
 export default ProjectsController;

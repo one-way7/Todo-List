@@ -64,6 +64,10 @@ class DisplayController {
                 const doneBtnContent = isDone ? 'Done' : 'Mark as done';
                 const doneBtnClass = isDone ? 'done_btn' : '';
                 const toDoCardStatusClass = isDone ? 'done' : 's';
+                const importantBtnContent = isImportant
+                    ? 'Important!'
+                    : 'Mark as Important';
+                const importantBtnClass = isImportant ? 'important' : '';
 
                 const toDoElem = document.createElement('div');
                 toDoElem.classList.add('toDo_card', toDoCardStatusClass);
@@ -74,9 +78,12 @@ class DisplayController {
                         <div class="toDo_title">${title}</div>
                         <div class="toDo_descr">${description}</div>
                         <div class="toDo_date">${date}</div>
-                        <button class="button_status ${doneBtnClass}">
-                            ${doneBtnContent}
-                        </button>
+                        <div class="card_buttons">
+                            <button class="button_status ${doneBtnClass}">
+                                ${doneBtnContent}
+                            </button>
+                            <button class="button_important ${importantBtnClass}">${importantBtnContent}</button>
+                        </div>
                     </div>
                     <div class="toDo_card-settings">
                         <span class="material-symbols-rounded delete_card-icon">
@@ -234,10 +241,26 @@ class DisplayController {
 
     handleClickMarkAsDone = (e) => {
         if (e.target.classList.contains('button_status')) {
-            const toDoCardIndex =
-                e.target.parentNode.parentNode.getAttribute('data-todo-id');
+            const toDoCardIndex = e.target
+                .closest('.toDo_card')
+                .getAttribute('data-todo-id');
 
             this.#projectsController.toggleDoneStatus(
+                this.#activeProjectElemId,
+                toDoCardIndex,
+            );
+
+            this.#renderActiveProjectToDos(this.#activeProjectElemId);
+        }
+    };
+
+    handleClickMarkAsImportant = (e) => {
+        if (e.target.classList.contains('button_important')) {
+            const toDoCardIndex = e.target
+                .closest('.toDo_card')
+                .getAttribute('data-todo-id');
+
+            this.#projectsController.toggleImportantStatus(
                 this.#activeProjectElemId,
                 toDoCardIndex,
             );

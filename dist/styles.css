@@ -21,6 +21,7 @@
     --accent: #5433ff;
     --orange-color: #f97316;
     --green-color: #84cc16;
+    --red-color: #b91c1c;
 }
 
 body {
@@ -291,7 +292,7 @@ body {
     position: relative;
 
     padding: 2.2rem;
-    width: 25rem;
+    width: 26rem;
     height: 32rem;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
         rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
@@ -305,7 +306,7 @@ body {
     content: '';
     position: absolute;
     width: 110%;
-    height: 3px;
+    height: 2px;
 
     top: 50%;
     left: -5%;
@@ -344,14 +345,20 @@ body {
     color: var(--text-color);
 }
 
-.button_status {
+.card_buttons {
     margin-top: auto;
-    width: 11rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.button_status,
+.button_important {
+    width: 9rem;
     height: 4rem;
 
     font-family: 'Alata', sans-serif;
     font-weight: 500;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: var(--text-color-black);
 
     background-color: #fff;
@@ -359,6 +366,10 @@ body {
     border: 1px solid var(--green-color);
     border-radius: 50px;
     cursor: pointer;
+}
+
+.button_important {
+    border: 1px solid var(--red-color);
 }
 
 .toDo_form {
@@ -471,5 +482,10 @@ body {
 
 .done_btn {
     background-color: var(--green-color);
+    color: var(--text-color-white);
+}
+
+.important {
+    background-color: var(--red-color);
     color: var(--text-color-white);
 }
