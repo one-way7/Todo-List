@@ -10,7 +10,7 @@ class DisplayController {
     #projectsController = new ProjectsController();
     #activeProject = this.#projectsController.getActiveProject(0);
     #activeProjectElemId = 0;
-    #toDosElem = [];
+    #toDosObj = [];
 
     constructor() {}
 
@@ -55,20 +55,19 @@ class DisplayController {
             this.#hideHeaderContent();
         }
 
-        this.#toDosElem.forEach((toDo, i) => {
+        this.#toDosObj.forEach((toDo, i) => {
             const { title, description, date, isImportant, isDone } =
                 toDo.getToDoInfo();
 
             const doneBtnContent = isDone ? 'Done' : 'Mark as done';
             const doneBtnClass = isDone ? 'done_btn' : '';
-            const toDoCardStatusClass = isDone ? 'done' : 's';
             const importantBtnContent = isImportant
                 ? 'Important!'
                 : 'Mark as Important';
             const importantBtnClass = isImportant ? 'important' : '';
-
             const toDoElem = document.createElement('div');
-            toDoElem.classList.add('toDo_card', toDoCardStatusClass);
+            toDoElem.classList.add('toDo_card');
+
             toDoElem.setAttribute('data-toDo-id', i);
 
             toDoElem.innerHTML = `
@@ -95,12 +94,12 @@ class DisplayController {
     };
 
     #renderActiveProjectToDos = () => {
-        this.#toDosElem = this.#activeProject.getToDos();
+        this.#toDosObj = this.#activeProject.getToDos();
         this.#renderToDos();
     };
 
     #renderAllTasksTabToDos = () => {
-        this.#toDosElem = this.#projectsController
+        this.#toDosObj = this.#projectsController
             .getProjects()
             .map((project) => project.getToDos())
             .flat();
@@ -143,14 +142,6 @@ class DisplayController {
     #setActiveProjectElem = (projectElem) => {
         this.#removeFocusClassOnProjectElems();
         this.#addFocusClassOnProjectElem(projectElem);
-    };
-
-    #changeStateDoneBtn = (target, isDone) => {
-        const doneBtnContent = isDone ? 'Done' : 'Mark as done';
-        const doneBtnClass = isDone ? 'done_btn' : '';
-        console.log(target);
-        target.textContent = doneBtnContent;
-        target.classList.toggle('done_btn');
     };
 
     handleClickAddProject = () => {
@@ -217,7 +208,14 @@ class DisplayController {
         const formData = new FormData(this.#toDoForm);
         const { title, description, date } = Object.fromEntries(formData);
 
-        this.#activeProject.addToDo(title, description, date, false, false);
+        this.#activeProject.addToDo(
+            title,
+            description,
+            date,
+            false,
+            false,
+            this.#activeProjectElemId,
+        );
         this.#hideElement(this.#toDoForm);
         this.#hideElement(this.#overlayDiv);
         this.#hideHeaderContent();
@@ -244,8 +242,9 @@ class DisplayController {
 
     handleClickDeleteToDo = (e) => {
         if (e.target.classList.contains('delete_card-icon')) {
-            const toDoCardIndex =
-                e.target.parentNode.parentNode.getAttribute('data-todo-id');
+            const toDoCardIndex = e.target
+                .closest('.toDo_card')
+                .getAttribute('data-todo-id');
 
             this.#projectsController.deleteToDoFromProject(
                 this.#activeProjectElemId,
@@ -262,13 +261,9 @@ class DisplayController {
                 .closest('.toDo_card')
                 .getAttribute('data-todo-id');
 
-            this.#projectsController.toggleDoneStatus(
-                this.#activeProjectElemId,
-                toDoCardIndex,
-            );
+            this.#toDosObj[toDoCardIndex].changeDoneStatus();
 
-            this.#changeStateDoneBtn(e.target);
-            // this.#renderActiveProjectToDos();
+            this.#renderToDos();
         }
     };
 
@@ -278,12 +273,9 @@ class DisplayController {
                 .closest('.toDo_card')
                 .getAttribute('data-todo-id');
 
-            this.#projectsController.toggleImportantStatus(
-                this.#activeProjectElemId,
-                toDoCardIndex,
-            );
+            this.#toDosObj[toDoCardIndex].changeImportantStatus();
 
-            this.#renderActiveProjectToDos(this.#activeProjectElemId);
+            this.#renderToDos();
         }
     };
 }

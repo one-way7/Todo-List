@@ -29,18 +29,6 @@ class ProjectsController {
     getActiveProject = (i) => {
         return this.#projects[i];
     };
-
-    toggleDoneStatus = (projectIndex, toDoIndex) => {
-        this.getActiveProject(projectIndex)
-            .getToDo(toDoIndex)
-            .changeDoneStatus();
-    };
-
-    toggleImportantStatus = (projectIndex, toDoIndex) => {
-        this.getActiveProject(projectIndex)
-            .getToDo(toDoIndex)
-            .changeImportantStatus();
-    };
 }
 
 export default ProjectsController;
