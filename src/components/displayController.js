@@ -1,4 +1,5 @@
 import ProjectsController from './projectsController';
+import { format, differenceInDays, startOfDay } from 'date-fns';
 
 class DisplayController {
     #projectsContainer = document.querySelector('.projects_wrapper');
@@ -61,6 +62,7 @@ class DisplayController {
         this.#todosObjFiltred.forEach((toDo, i) => {
             const { title, description, date, isImportant, isDone } =
                 toDo.getToDoInfo();
+            const formatDate = format(date, 'dd MMMM yyyy');
 
             const doneBtnContent = isDone ? 'Done' : 'Mark as done';
             const doneBtnClass = isDone ? 'done_btn' : '';
@@ -77,7 +79,7 @@ class DisplayController {
                     <div class="toDo_card-content">
                         <div class="toDo_title">${title}</div>
                         <div class="toDo_descr">${description}</div>
-                        <div class="toDo_date">${date}</div>
+                        <div class="toDo_date">${formatDate}</div>
                         <div class="card_buttons">
                             <button class="button_status ${doneBtnClass}">
                                 ${doneBtnContent}
@@ -112,16 +114,50 @@ class DisplayController {
     };
 
     #renderImportantTasks = () => {
-        this.#toDosObj = this.#projectsController
-            .getProjects()
-            .map((project) => project.getToDos())
-            .flat();
+        this.#toDosObj = this.#getAllTasks();
 
         this.#todosObjFiltred = this.#toDosObj.filter((toDo) => {
             return toDo.getImportantStatus();
         });
 
         this.#renderToDos();
+    };
+
+    #renderTodayTasks = () => {
+        this.#toDosObj = this.#getAllTasks();
+
+        this.#todosObjFiltred = this.#toDosObj.filter((toDo) => {
+            const days = differenceInDays(
+                startOfDay(toDo.getDate()),
+                startOfDay(new Date()),
+            );
+
+            return days === 0;
+        });
+
+        this.#renderToDos();
+    };
+
+    #renderNextSevenDaysTasks = () => {
+        this.#toDosObj = this.#getAllTasks();
+
+        this.#todosObjFiltred = this.#toDosObj.filter((toDo) => {
+            const days = differenceInDays(
+                startOfDay(toDo.getDate()),
+                startOfDay(new Date()),
+            );
+
+            return days > 0 && days < 8;
+        });
+
+        this.#renderToDos();
+    };
+
+    #getAllTasks = () => {
+        return this.#projectsController
+            .getProjects()
+            .map((project) => project.getToDos())
+            .flat();
     };
 
     #addProjectToContainer = (title) => {
@@ -234,6 +270,18 @@ class DisplayController {
         this.#renderImportantTasks();
     };
 
+    handleClickTodayTasksTab = (e) => {
+        this.#activeProjectElemId = 'today';
+        this.#setActiveHomeElem(e);
+        this.#renderTodayTasks();
+    };
+
+    handleClickNextSevenDaysTasksTab = (e) => {
+        this.#activeProjectElemId = 'nextSevenDays';
+        this.#setActiveHomeElem(e);
+        this.#renderNextSevenDaysTasks();
+    };
+
     handleClickNewTaskButton = () => {
         this.#displayElement(this.#toDoForm);
         this.#displayElement(this.#overlayDiv);
@@ -304,6 +352,12 @@ class DisplayController {
                     break;
                 case 'important':
                     this.#renderImportantTasks();
+                    break;
+                case 'today':
+                    this.#renderTodayTasks();
+                    break;
+                case 'nextSevenDays':
+                    this.#renderNextSevenDaysTasks();
                     break;
                 default:
                     this.#renderActiveProjectToDos();
