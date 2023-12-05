@@ -6,6 +6,7 @@ class DisplayController {
     #projectForm = document.querySelector('.project_form');
     #headerContent = document.querySelector('.h3');
     #overlayDiv = document.querySelector('#overlay');
+    #homeContainer = document.querySelector('.nav');
     #toDoForm = document.querySelector('.toDo_form');
     #newTaskBtn = document.querySelector('.new_task');
     #projectsController = new ProjectsController();
@@ -22,7 +23,7 @@ class DisplayController {
             const projectElem = document.createElement('div');
             projectElem.classList.add('project_block');
 
-            if (+this.#activeProjectElemId === i) {
+            if (this.#activeProjectElemId == i) {
                 projectElem.classList.add('focus');
             }
 
@@ -131,6 +132,15 @@ class DisplayController {
         });
     };
 
+    #removeFocusClassOnHomeElems = () => {
+        const homeFolderElems =
+            this.#homeContainer.querySelectorAll('.folder_line');
+
+        homeFolderElems.forEach((folder) => {
+            folder.classList.remove('focus');
+        });
+    };
+
     #hideHeaderContent = () => {
         this.#hideElement(this.#headerContent);
     };
@@ -140,6 +150,7 @@ class DisplayController {
     };
 
     #setActiveProjectElem = (projectElem) => {
+        this.#removeFocusClassOnHomeElems();
         this.#removeFocusClassOnProjectElems();
         this.#addFocusClassOnProjectElem(projectElem);
     };
@@ -188,8 +199,11 @@ class DisplayController {
         }
     };
 
-    handleClickOnAllTasksTab = () => {
+    handleClickOnAllTasksTab = (e) => {
         this.#activeProjectElemId = null;
+        this.#removeFocusClassOnProjectElems();
+        this.#removeFocusClassOnHomeElems();
+        this.#addFocusClassOnProjectElem(e.currentTarget);
         this.#hideElement(this.#newTaskBtn);
         this.#renderAllTasksTabToDos();
     };
