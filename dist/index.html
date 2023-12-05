@@ -57,7 +57,7 @@
                 <nav class="nav">
                     <ul>
                         <li>
-                            <div class="folder_line">
+                            <div class="folder_line" data-type="all_tasks">
                                 <img
                                     class="folder_icon"
                                     src="./assets/icons/task-icon.png"
@@ -69,7 +69,7 @@
                             </div>
                         </li>
                         <li>
-                            <div class="folder_line">
+                            <div class="folder_line" data-type="today">
                                 <img
                                     class="folder_icon"
                                     src="./assets/icons/today-icon.png"
@@ -81,7 +81,10 @@
                             </div>
                         </li>
                         <li>
-                            <div class="folder_line">
+                            <div
+                                class="folder_line"
+                                data-type="next_seven_days"
+                            >
                                 <img
                                     class="folder_icon"
                                     src="./assets/icons/next-days-icon.png"
@@ -93,7 +96,7 @@
                             </div>
                         </li>
                         <li>
-                            <div class="folder_line">
+                            <div class="folder_line" data-type="important">
                                 <img
                                     class="folder_icon"
                                     src="./assets/icons/important-icon.png"
@@ -147,7 +150,7 @@
             </div>
 
             <section class="content">
-                <h1 class="h1">All Tasks</h1>
+                <h1 class="h1">Default Project</h1>
                 <div class="tasks_container">
                     <h3 class="h3">Yay! No Tasks!</h3>
                     <div class="toDos_wrapper"></div>
@@ -159,6 +162,7 @@
                                 name="title"
                                 placeholder="feed the dog"
                                 id="toDo_title"
+                                required
                             />
                             <label for="toDo_descr">Description:</label>
                             <textarea
@@ -168,7 +172,12 @@
                                 placeholder="Feed the dog around 2 p.m."
                             ></textarea>
                             <label for="toDo_date">Date:</label>
-                            <input type="date" name="date" id="toDo_date" />
+                            <input
+                                type="date"
+                                name="date"
+                                id="toDo_date"
+                                required
+                            />
                             <button class="toDo_form-btn">Accept</button>
                         </div>
                         <div class="form_close">
