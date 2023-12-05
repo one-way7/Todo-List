@@ -49,7 +49,7 @@ class DisplayController {
     #renderToDos = () => {
         this.#toDosContainer.textContent = '';
 
-        if (+this.#activeProject.getToDos().length === 0) {
+        if (+this.#toDosObj.length === 0) {
             this.#showHeaderContent();
         } else {
             this.#hideHeaderContent();
