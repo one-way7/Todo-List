@@ -7,6 +7,7 @@ class DisplayController {
     #projectForm = document.querySelector('.project_form');
     #headerContent = document.querySelector('.h3');
     #overlayDiv = document.querySelector('#overlay');
+    #mainHeader = document.querySelector('.h1');
     #homeContainer = document.querySelector('.nav');
     #toDoForm = document.querySelector('.toDo_form');
     #newTaskBtn = document.querySelector('.new_task');
@@ -24,7 +25,6 @@ class DisplayController {
         this.#projectsController.getProjects().forEach((project, i) => {
             const projectElem = document.createElement('div');
             projectElem.classList.add('project_block');
-
             if (this.#activeProjectElemId == i) {
                 projectElem.classList.add('focus');
             }
@@ -160,6 +160,10 @@ class DisplayController {
             .flat();
     };
 
+    #changeTextContentInsideHeader = (content) => {
+        this.#mainHeader.textContent = content;
+    };
+
     #addProjectToContainer = (title) => {
         this.#projectsController.addProject(title);
     };
@@ -254,30 +258,35 @@ class DisplayController {
             this.#activeProjectElemId = projectElemId;
 
             this.#displayElement(this.#newTaskBtn);
+            this.#changeTextContentInsideHeader(this.#activeProject.getTitle());
             this.#renderActiveProjectToDos();
         }
     };
 
     handleClickOnAllTasksTab = (e) => {
         this.#activeProjectElemId = 'allTasks';
+        this.#changeTextContentInsideHeader('All Tasks');
         this.#setActiveHomeElem(e);
         this.#renderAllTasksTabToDos();
     };
 
     handleClickOnImportantTasksTab = (e) => {
         this.#activeProjectElemId = 'important';
+        this.#changeTextContentInsideHeader('Important');
         this.#setActiveHomeElem(e);
         this.#renderImportantTasks();
     };
 
     handleClickTodayTasksTab = (e) => {
         this.#activeProjectElemId = 'today';
+        this.#changeTextContentInsideHeader('Today');
         this.#setActiveHomeElem(e);
         this.#renderTodayTasks();
     };
 
     handleClickNextSevenDaysTasksTab = (e) => {
         this.#activeProjectElemId = 'nextSevenDays';
+        this.#changeTextContentInsideHeader('Next 7 Days');
         this.#setActiveHomeElem(e);
         this.#renderNextSevenDaysTasks();
     };
@@ -320,13 +329,18 @@ class DisplayController {
             if (+projectIndex === 0) return;
             this.#projectsController.deleteProject(projectIndex);
 
-            if (this.#activeProjectElemId === projectIndex) {
+            if (this.#activeProjectElemId == projectIndex) {
                 this.#activeProjectElemId -= 1;
+
                 this.#activeProject = this.#projectsController.getActiveProject(
                     this.#activeProjectElemId,
                 );
                 this.#renderActiveProjectToDos();
+                this.#changeTextContentInsideHeader(
+                    this.#activeProject.getTitle(),
+                );
             }
+
             this.renderProjects();
         }
     };
