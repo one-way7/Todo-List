@@ -24,7 +24,9 @@ class DisplayController {
 
         this.#projectsController.getProjects().forEach((project, i) => {
             const projectElem = document.createElement('div');
+            const isRenderDeleteIcon = i === 0 ? '' : 'delete';
             projectElem.classList.add('project_block');
+
             if (this.#activeProjectElemId == i) {
                 projectElem.classList.add('focus');
             }
@@ -39,7 +41,7 @@ class DisplayController {
                 />
                 <span class="project_name">${project.getTitle()}</span>
                 <span class="material-symbols-rounded delete_icon">
-                    delete
+                    ${isRenderDeleteIcon}
                 </span>
             `;
 
