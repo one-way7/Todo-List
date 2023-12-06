@@ -207,10 +207,19 @@ class DisplayController {
         this.#displayElement(this.#headerContent);
     };
 
-    #setActiveProjectElem = (projectElem) => {
+    #setActiveProjectElem = (target) => {
+        const projectElemId = target.getAttribute('data-id');
         this.#removeFocusClassOnHomeElems();
         this.#removeFocusClassOnProjectElems();
-        this.#addFocusClassOnProjectElem(projectElem);
+        this.#addFocusClassOnProjectElem(target);
+
+        this.#activeProject =
+            this.#projectsController.getActiveProject(projectElemId);
+        this.#activeProjectElemId = projectElemId;
+
+        this.#displayElement(this.#newTaskBtn);
+        this.#changeTextContentInsideHeader(this.#activeProject.getTitle());
+        this.#renderActiveProjectToDos();
     };
 
     #setActiveHomeElem = (e) => {
@@ -251,17 +260,11 @@ class DisplayController {
         if (e.target.classList.contains('project_block')) {
             const target = e.target;
 
-            const projectElem = target;
-            const projectElemId = target.getAttribute('data-id');
-            this.#setActiveProjectElem(projectElem);
+            this.#setActiveProjectElem(target);
+        } else if (e.target.parentNode.classList.contains('project_block')) {
+            const target = e.target.parentNode;
 
-            this.#activeProject =
-                this.#projectsController.getActiveProject(projectElemId);
-            this.#activeProjectElemId = projectElemId;
-
-            this.#displayElement(this.#newTaskBtn);
-            this.#changeTextContentInsideHeader(this.#activeProject.getTitle());
-            this.#renderActiveProjectToDos();
+            this.#setActiveProjectElem(target);
         }
     };
 
