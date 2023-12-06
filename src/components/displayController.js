@@ -411,6 +411,57 @@ class DisplayController {
             }
         }
     };
+
+    init = () => {
+        const newProjectLine = document.querySelector('.new-project_line');
+        const addBtn = document.querySelector('.add_btn');
+        const cancelBtn = document.querySelector('.cancel_btn');
+        const projectsWrapper = document.querySelector('.projects_wrapper');
+        const newTaskBtn = document.querySelector('.new_task');
+        const formCloseBtn = document.querySelector('.form_close > span');
+        const toDoForm = document.querySelector('.toDo_form');
+        const toDosWrapper = document.querySelector('.toDos_wrapper');
+        const allTasksFolder = document.querySelector(
+            '[data-type="all_tasks"]',
+        );
+        const importantFolder = document.querySelector(
+            '[data-type="important"]',
+        );
+        const todayFolder = document.querySelector('[data-type="today"]');
+        const nextSevenDaysFolder = document.querySelector(
+            '[data-type="next_seven_days"]',
+        );
+
+        this.renderProjects();
+
+        newProjectLine.addEventListener('click', this.handleClickAddProject);
+        addBtn.addEventListener('click', this.handleSubmitAddProjectForm);
+        cancelBtn.addEventListener('click', this.handleSubmitCancelProjectForm);
+        projectsWrapper.addEventListener('click', this.handleClickOnProject);
+        newTaskBtn.addEventListener('click', this.handleClickNewTaskButton);
+        formCloseBtn.addEventListener(
+            'click',
+            this.handleClickCloseNewTaskForm,
+        );
+        toDoForm.addEventListener('submit', this.handleSubmitNewTaskForm);
+        projectsWrapper.addEventListener(
+            'click',
+            this.handleClickDeleteProject,
+        );
+        toDosWrapper.addEventListener('click', this.handleClickDeleteToDo);
+        toDosWrapper.addEventListener('click', this.handleClickMarkAsDone);
+        toDosWrapper.addEventListener('click', this.handleClickMarkAsImportant);
+        allTasksFolder.addEventListener('click', this.handleClickOnAllTasksTab);
+        importantFolder.addEventListener(
+            'click',
+            this.handleClickOnImportantTasksTab,
+        );
+        todayFolder.addEventListener('click', this.handleClickTodayTasksTab);
+        nextSevenDaysFolder.addEventListener(
+            'click',
+            this.handleClickNextSevenDaysTasksTab,
+        );
+    };
 }
 
 export default DisplayController;
